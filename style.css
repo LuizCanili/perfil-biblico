@@ -1,0 +1,59 @@
+/* 1. CONFIGURAÇÃO BASE */
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Segoe UI', sans-serif; background-color: #001a33;
+    color: white; display: flex; justify-content: center; align-items: center; overflow: hidden;
+}
+
+/* 2. ESTRUTURA DAS TELAS */
+.screen {
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    height: 100vh; width: 100vw; max-width: 450px; padding: 20px; box-sizing: border-box;
+}
+
+/* 3. ALINHAMENTO DO TÍTULO (QUADRADO AMARELO) */
+.header-image {
+    width: 100%; display: flex; justify-content: center; margin-bottom: 25px;
+}
+.header-image div {
+    background-color: #FFFF00; color: #4B0082; width: 160px; height: 160px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    font-weight: bold; border: 5px solid black; font-size: 26px; text-align: center;
+    line-height: 1.1; box-sizing: border-box;
+}
+
+/* 4. MENU INICIAL */
+.menu { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.menu label { color: #FFFFFF; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 0.9rem; }
+.menu select { width: 85%; max-width: 260px; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: none; font-size: 1rem; }
+
+/* 5. PLACAR COLORIDO */
+#placar-container { display: flex; justify-content: center; gap: 8px; width: 100%; margin-bottom: 15px; }
+.equipe-card { padding: 8px 4px; border-radius: 10px; text-align: center; flex: 1; max-width: 90px; border: 2px solid rgba(0,0,0,0.2); }
+.cor-eqp-1 { background-color: #E74C3C; color: white; } /* Vermelho */
+.cor-eqp-2 { background-color: #2ECC71; color: white; } /* Verde */
+.cor-eqp-3 { background-color: #3498DB; color: white; } /* Azul */
+.cor-eqp-4 { background-color: #F39C12; color: white; } /* Laranja */
+.equipe-nome { font-size: 0.65rem; font-weight: bold; display: block; }
+.equipe-pontos { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; }
+.btn-ponto { width: 30px !important; height: 30px !important; padding: 0 !important; margin: 2px !important; border-radius: 5px !important; font-size: 1.2rem !important; }
+
+/* 6. TEXTOS DO JOGO */
+#display-categoria { color: #8E44AD; font-style: italic; margin-bottom: 0; text-transform: uppercase; font-size: 1.1rem; }
+#display-nome { color: #FF0000; margin-top: 5px; margin-bottom: 20px; text-transform: uppercase; font-size: 1.7rem; font-weight: bold; }
+
+/* 7. BOTÕES E DICAS */
+button { width: 90%; max-width: 280px; padding: 16px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: transform 0.1s; }
+button:active { transform: scale(0.96); }
+.btn-amarelo { background-color: #F1C40F; color: black; }
+.btn-roxo { background-color: #9C27B0; color: white; }
+.btn-voltar { background-color: #7F8C8D; color: white; }
+
+.dicas-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+.btn-dica { background-color: #34495E; color: #FFFFFF; padding: 12px; font-size: 0.8rem; border-radius: 8px; height: 60px; display: flex; align-items: center; justify-content: center; }
+.btn-dica.revelada { background-color: #ECF0F1; color: #2C3E50; font-weight: bold; }
+
+/* 8. CADASTRO */
+.cadastro-header { background: #3F51B5; width: 100%; padding: 15px; font-weight: bold; text-align: center; }
+.form-scroll { width: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+input, select { width: 90%; padding: 12px; margin: 6px 0; border-radius: 8px; border: none; }

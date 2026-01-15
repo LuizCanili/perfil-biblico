@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Perfil Bíblico - Moderador</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="screen1" class="screen" style="display: flex;">
+        <div class="header-image">
+            <div>PERFIL<br>BÍBLICO</div>
+        </div>
+        <div class="menu">
+            <label>QUANTIDADE DE EQUIPES:</label>
+            <select id="qtd_equipes">
+                <option value="2">2 Equipes</option>
+                <option value="3">3 Equipes</option>
+                <option value="4">4 Equipes</option>
+            </select>
+            <button class="btn-amarelo" onclick="iniciarJogo()">INICIAR JOGO</button>
+            <button class="btn-roxo" onclick="showScreen('screen3')">CADASTRAR CARTAS</button>
+        </div>
+    </div>
+
+    <div id="screen2" class="screen" style="display:none;">
+        <div id="placar-container"></div>
+        
+        <h2 id="display-categoria">CATEGORIA</h2>
+        <h2 id="display-nome">NOME</h2>
+        
+        <div class="dicas-container">
+            <button class="btn-dica" id="btn-dica1" onclick="revelarDica(1)">Dica 1</button>
+            <button class="btn-dica" id="btn-dica2" onclick="revelarDica(2)">Dica 2</button>
+            <button class="btn-dica" id="btn-dica3" onclick="revelarDica(3)">Dica 3</button>
+            <button class="btn-dica" id="btn-dica4" onclick="revelarDica(4)">Dica 4</button>
+            <button class="btn-dica" id="btn-dica5" onclick="revelarDica(5)">Dica 5</button>
+            <button class="btn-dica" id="btn-dica6" onclick="revelarDica(6)">Dica 6</button>
+            <button class="btn-dica" id="btn-dica7" onclick="revelarDica(7)">Dica 7</button>
+            <button class="btn-dica" id="btn-dica8" onclick="revelarDica(8)">Dica 8</button>
+            <button class="btn-dica" id="btn-dica9" onclick="revelarDica(9)">Dica 9</button>
+            <button class="btn-dica" id="btn-dica10" onclick="revelarDica(10)">Dica 10</button>
+        </div>
+
+        <button class="btn-roxo" style="width: 90%; margin-top: 20px;" onclick="proximaCarta()">PRÓXIMA CARTA</button>
+        <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
+    </div>
+
+    <div id="screen3" class="screen" style="display:none; overflow-y: auto;">
+        <div class="cadastro-header">CADASTRO DE CARTAS</div>
+        <div class="form-scroll">
+            <select id="sel_categoria">
+                <option value="Personagem">Personagem</option>
+                <option value="Lugar">Lugar</option>
+                <option value="Coisa">Coisa</option>
+            </select>
+            <input type="text" id="txt_personagem" placeholder="NOME (MAIÚSCULO)">
+            <div class="dicas-inputs">
+                <input type="text" id="dica1" placeholder="Dica 1"><input type="text" id="dica2" placeholder="Dica 2">
+                <input type="text" id="dica3" placeholder="Dica 3"><input type="text" id="dica4" placeholder="Dica 4">
+                <input type="text" id="dica5" placeholder="Dica 5"><input type="text" id="dica6" placeholder="Dica 6">
+                <input type="text" id="dica7" placeholder="Dica 7"><input type="text" id="dica8" placeholder="Dica 8">
+                <input type="text" id="dica9" placeholder="Dica 9"><input type="text" id="dica10" placeholder="Dica 10">
+            </div>
+            <button class="btn-salvar" onclick="processarSalvamento()">SALVAR CARTA</button>
+            <button class="btn-voltar" onclick="showScreen('screen1')">CANCELAR</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        window.showScreen = function(id) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            const target = document.getElementById(id);
+            if(target) target.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
