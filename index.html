@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Perfil Bíblico - Moderador</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div id="screen2" class="screen" style="display:none; overflow-y: auto;">
+    <div id="screen2" class="screen" style="display:none;">
         <div id="placar-container"></div>
         
         <h2 id="display-categoria">CATEGORIA</h2>
@@ -45,11 +45,13 @@
             <button class="btn-dica-longa" id="btn-dica10" onclick="revelarDica(10)">Dica 10</button>
         </div>
 
-        <button class="btn-roxo" style="width: 90%; margin-top: 20px;" onclick="proximaCarta()">PRÓXIMA CARTA</button>
-        <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
+        <div class="footer-buttons">
+            <button class="btn-roxo" onclick="proximaCarta()">PRÓXIMA CARTA</button>
+            <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
+        </div>
     </div>
 
-    <div id="screen3" class="screen" style="display:none; overflow-y: auto;">
+    <div id="screen3" class="screen" style="display:none;">
         <div class="cadastro-header">CADASTRO DE CARTAS</div>
         <div class="form-scroll">
             <select id="sel_categoria">
