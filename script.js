@@ -1,6 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// SEGURANÇA: Mude a senha abaixo para a sua preferência
+const SENHA_MODERADOR = "281920"; 
+
 const firebaseConfig = {
   apiKey: "AIzaSyCWXSzJMGkH5XG8s5THKLLh_EGf1xT_3hU",
   authDomain: "perfilbiblico-7ba7e.firebaseapp.com",
@@ -8,17 +11,15 @@ const firebaseConfig = {
   projectId: "perfilbiblico-7ba7e",
   storageBucket: "perfilbiblico-7ba7e.appspot.com",
   messagingSenderId: "1015160624873",
-  appId: "1:1015160624873:web:dc75fc3e9c89f0ba5b0278",
-  measurementId: "G-3P0KRET8VS"
+  appId: "1:1015160624873:web:dc75fc3e9c89f0ba5b0278"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 let dicasAtuais = {};
 let pontuacoes = {};
 
-// Iniciar Jogo e Criar Placar
+// Iniciar Placar e Jogo
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
@@ -28,11 +29,11 @@ window.iniciarJogo = function() {
         pontuacoes[i] = 0;
         container.innerHTML += `
             <div class="equipe-card cor-eqp-${i}">
-                <span class="equipe-nome">EQUIPE ${i}</span>
+                <span class="equipe-nome">EQP ${i}</span>
                 <span class="equipe-pontos" id="pontos-eqp-${i}">0</span>
                 <div style="display:flex; justify-content:center;">
-                    <button class="btn-ponto" onclick="alterarPonto(${i},1)">+</button>
-                    <button class="btn-ponto" onclick="alterarPonto(${i},-1)">-</button>
+                    <button style="width:30px; height:30px; padding:0; margin:2px;" onclick="alterarPonto(${i},1)">+</button>
+                    <button style="width:30px; height:30px; padding:0; margin:2px;" onclick="alterarPonto(${i},-1)">-</button>
                 </div>
             </div>`;
     }
@@ -74,8 +75,13 @@ window.sortearNovaCarta = async function() {
 
 window.proximaCarta = () => window.sortearNovaCarta();
 
-// Salvamento com Verificação de Duplicata e Limpeza
+// SALVAMENTO PROTEGIDO POR SENHA
 window.processarSalvamento = async function() {
+    const senhaDigitada = prompt("Senha de Moderador para autorizar:");
+    if (senhaDigitada !== SENHA_MODERADOR) {
+        return alert("Senha incorreta! Operação negada.");
+    }
+
     const nomeInput = document.getElementById('txt_personagem');
     const nome = nomeInput.value.trim().toUpperCase();
     if(!nome) return alert("Digite o nome!");
@@ -83,18 +89,18 @@ window.processarSalvamento = async function() {
     const dbRef = ref(getDatabase());
     const snapshot = await get(child(dbRef, `personagens/${nome}`));
     if (snapshot.exists()) {
-        if (!confirm(`A carta "${nome}" já existe. Sobrescrever?`)) return;
+        if (!confirm(`A carta "${nome}" já existe. Substituir?`)) return;
     }
 
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) {
-        dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Vazio";
+        dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Não informada";
     }
 
     set(ref(db, 'personagens/' + nome), { nome, categoria, dicas })
     .then(() => {
-        alert("Salvo!");
+        alert("Carta salva!");
         nomeInput.value = "";
         for(let i=1; i<=10; i++) document.getElementById(`dica${i}`).value = "";
     });
