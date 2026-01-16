@@ -1,43 +1,43 @@
-/* 1. CONFIGURAÇÃO GLOBAL E RESET */
+/* 1. CONFIGURAÇÃO GLOBAL - CORREÇÃO SAFARI */
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    height: 100svh; /* Altura dinâmica para Safari */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #001a33; /* Azul escuro do fundo */
+    background-color: #001a33;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
-/* 2. ESTRUTURA DAS TELAS (CENTRALIZAÇÃO TOTAL) */
+/* 2. ESTRUTURA DAS TELAS */
 .screen {
-    display: none; /* Controlado pelo JavaScript */
+    display: none;
     flex-direction: column;
-    align-items: center;    /* Centraliza horizontalmente */
-    justify-content: center;   /* Centraliza verticalmente */
-    height: 100vh;
+    align-items: center;
+    justify-content: flex-start; /* Alinhamento do topo para baixo */
+    height: 100svh;
     width: 100vw;
     max-width: 450px;
-    padding: 20px;
+    /* Margens de segurança para Notch e barra de gestos */
+    padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
     box-sizing: border-box;
     text-align: center;
 }
 
-/* 3. ALINHAMENTO DO TÍTULO (QUADRADO AMARELO) */
+/* 3. TÍTULO QUADRADO (TELA INICIAL) */
 .header-image {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 25px;
+    margin: 30px 0;
 }
-
 .header-image div {
-    background-color: #f3f34c; /* Amarelo vibrante */
-    color: #4B0082; /* Roxo do texto */
+    background-color: #FFFF00;
+    color: #4B0082;
     width: 300px;
     height: 300px;
     display: flex;
@@ -47,174 +47,60 @@ body, html {
     font-weight: bold;
     border: 5px solid black;
     font-size: 50px;
-    text-align: center;
     line-height: 1.1;
     box-sizing: border-box;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
 }
 
-/* 4. MENU INICIAL (LABEL E SELECT) */
-.menu {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+/* 4. MENU INICIAL */
+.menu { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.menu label { color: #FFFFFF; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 0.9rem; }
+.menu select { width: 85%; max-width: 260px; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: none; font-size: 1rem; text-align: center; }
 
-.menu label {
-    color: #FFFFFF; /* Texto em Branco solicitado */
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.menu select {
-    width: 85%;
-    max-width: 260px;
-    padding: 12px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-    text-align: center;
-}
-
-/* 5. PLACAR COLORIDO */
-#placar-container {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.equipe-card {
-    padding: 8px 4px;
-    border-radius: 10px;
-    text-align: center;
-    flex: 1;
-    max-width: 90px;
-    border: 2px solid rgba(0,0,0,0.2);
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
-}
-
-.cor-eqp-1 { background-color: #E74C3C; color: white; } /* Vermelho */
-.cor-eqp-2 { background-color: #2ECC71; color: white; } /* Verde */
-.cor-eqp-3 { background-color: #3498DB; color: white; } /* Azul */
-.cor-eqp-4 { background-color: #F39C12; color: white; } /* Laranja */
-
+/* 5. PLACAR COLORIDO (TELA DE JOGO) */
+#placar-container { display: flex; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; margin-bottom: 15px; }
+.equipe-card { padding: 8px 4px; border-radius: 10px; text-align: center; flex: 1; max-width: 90px; box-shadow: 0px 2px 5px rgba(0,0,0,0.3); }
+.cor-eqp-1 { background-color: #E74C3C; } /* Vermelho */
+.cor-eqp-2 { background-color: #2ECC71; } /* Verde */
+.cor-eqp-3 { background-color: #3498DB; } /* Azul */
+.cor-eqp-4 { background-color: #F39C12; } /* Laranja */
 .equipe-nome { font-size: 0.65rem; font-weight: bold; display: block; }
 .equipe-pontos { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; }
-.btn-ponto {
-    width: 30px !important;
-    height: 30px !important;
-    padding: 0 !important;
-    margin: 2px !important;
-    font-size: 1.2rem !important;
-    border-radius: 5px !important;
-}
+.btn-ponto { width: 30px !important; height: 30px !important; padding: 0 !important; margin: 2px !important; border-radius: 5px !important; font-size: 1.2rem !important; }
 
-/* 6. TEXTOS DO JOGO (MODERADOR) */
-#display-categoria {
-    color: #8E44AD; /* Roxo */
-    font-style: italic;
-    margin-bottom: 0;
-    text-transform: uppercase;
-    font-size: 1.1rem;
-}
+/* 6. TEXTOS DO JOGO */
+#display-categoria { color: #8E44AD; font-style: italic; text-transform: uppercase; font-size: 1.1rem; margin-top: 10px; }
+#display-nome { color: #FF0000; text-transform: uppercase; font-size: 1.8rem; font-weight: bold; margin: 5px 0 15px 0; }
 
-#display-nome {
-    color: #FF0000; /* Vermelho para o moderador ver a resposta */
-    margin-top: 5px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    font-size: 1.8rem;
-    font-weight: bold;
-}
-
-/* 7. DICAS EM LISTA VERTICAL CENTRALIZADA */
+/* 7. LISTA DE DICAS CENTRALIZADA */
 .dicas-container-vertical {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centraliza os botões horizontalmente */
-    gap: 8px;           /* Espaçamento entre as linhas */
-    width: 100%;
-    max-width: 380px;
-    margin: 0 auto 15px auto;
-    overflow-y: auto; /* Permite rolagem se as dicas forem longas */
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    width: 100%; overflow-y: auto; flex-grow: 1; padding: 10px 0;
 }
-
 .btn-dica-longa {
-    background-color: #34495E; /* Azul acinzentado */
-    color: #FFFFFF;
-    width: 90%;          /* Ocupa a largura centralizada */
-    max-width: 350px;
-    padding: 12px 15px;
-    font-size: 0.95rem;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    text-align: center;  /* Texto centralizado por padrão */
-    cursor: pointer;
-    min-height: 45px;
-    transition: transform 0.1s;
+    background-color: #34495E; color: #FFFFFF; width: 90%; max-width: 350px;
+    padding: 12px; font-size: 0.95rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+    min-height: 45px; cursor: pointer; text-align: center;
 }
+.btn-dica-longa.revelada { background-color: #ECF0F1; color: #2C3E50; font-weight: bold; text-align: left; padding-left: 15px; }
 
-/* Quando a dica é revelada */
-.btn-dica-longa.revelada {
-    background-color: #ECF0F1; /* Branco/Cinza claro */
-    color: #2C3E50; /* Texto escuro */
-    font-weight: bold;
-    border: 2px solid #BDC3C7;
-    text-align: left; /* Alinhado à esquerda para ler a frase da dica */
+/* 8. FOOTER FIXO (PRÓXIMA/VOLTAR) */
+.footer-buttons { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
+
+/* 9. TELA DE CADASTRO (Ajuste de Margem solicitado) */
+.cadastro-header {
+    background: #3F51B5; width: 100%; padding: 15px; font-weight: bold; text-align: center;
+    margin-top: 25px; /* Espaço acima do quadrado azul */
+    border-radius: 8px;
 }
-
-/* 8. BOTÕES GERAIS */
-button {
-    width: 90%;
-    max-width: 280px;
-    padding: 16px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.1s;
+.form-scroll {
+    width: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center;
+    padding-top: 15px; padding-bottom: 30px;
 }
+input, select { width: 90%; padding: 12px; margin: 6px 0; border-radius: 8px; border: none; font-size: 1rem; }
 
-button:active {
-    transform: scale(0.96);
-}
-
+/* BOTÕES GERAIS */
+button { width: 90%; max-width: 280px; padding: 16px; margin: 6px 0; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+button:active { transform: scale(0.96); }
 .btn-amarelo { background-color: #F1C40F; color: black; }
 .btn-roxo { background-color: #9C27B0; color: white; }
 .btn-voltar { background-color: #7F8C8D; color: white; }
-.btn-salvar { background-color: #E74C3C; color: white; width: 90%; }
-
-/* 9. CADASTRO */
-.cadastro-header {
-    background: #3F51B5;
-    width: 100%;
-    padding: 15px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.form-scroll {
-    width: 100%;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-input, select {
-    background: #f3f4ff;
-    width: 90%;
-    padding: 12px;
-    margin: 6px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-}
