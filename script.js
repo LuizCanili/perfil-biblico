@@ -18,7 +18,7 @@ const db = getDatabase(app);
 let dicasAtuais = {};
 let pontuacoes = {};
 
-// Iniciar Jogo e Gerar Placar Colorido
+// Inicia Equipes e Placar
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
@@ -35,8 +35,7 @@ window.iniciarJogo = function() {
                     <button class="btn-ponto btn-amarelo" onclick="alterarPonto(${i},1)">+</button>
                     <button class="btn-ponto btn-voltar" onclick="alterarPonto(${i},-1)">-</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
     window.showScreen('screen2');
 }
@@ -46,13 +45,42 @@ window.alterarPonto = (eq, val) => {
     document.getElementById(`pontos-eqp-${eq}`).innerText = pontuacoes[eq];
 };
 
+// Revela dica mantendo o número (ex: "3 - Texto da dica")
 window.revelarDica = (n) => {
     const btn = document.getElementById(`btn-dica${n}`);
-    btn.innerText = dicasAtuais[`dica${n}`];
+    btn.innerText = `${n} - ${dicasAtuais[`dica${n}`]}`;
     btn.classList.add('revelada');
 };
 
-// Salvamento com Verificação de Duplicata e Limpeza
+// Sorteio Aleatório
+window.sortearNovaCarta = async function() {
+    const dbRef = ref(getDatabase());
+    try {
+        const snapshot = await get(child(dbRef, 'personagens'));
+        if (snapshot.exists()) {
+            const lista = snapshot.val();
+            const chaves = Object.keys(lista);
+            const sorteado = chaves[Math.floor(Math.random() * chaves.length)];
+            const dados = lista[sorteado];
+
+            document.getElementById('display-categoria').innerText = dados.categoria;
+            document.getElementById('display-nome').innerText = dados.nome;
+            dicasAtuais = dados.dicas;
+
+            for(let i=1; i<=10; i++) {
+                const btn = document.getElementById(`btn-dica${i}`);
+                if(btn) {
+                    btn.innerText = `Dica ${i}`;
+                    btn.classList.remove('revelada');
+                }
+            }
+        }
+    } catch (e) { console.error(e); }
+}
+
+window.proximaCarta = () => window.sortearNovaCarta();
+
+// Cadastro com validação de duplicata
 window.processarSalvamento = async function() {
     const nome = document.getElementById('txt_personagem').value.trim().toUpperCase();
     if(!nome) return alert("Digite o nome!");
@@ -61,44 +89,19 @@ window.processarSalvamento = async function() {
     const snapshot = await get(child(dbRef, `personagens/${nome}`));
 
     if (snapshot.exists()) {
-        const confirmar = confirm(`A carta "${nome}" já existe. Deseja sobrescrever?`);
-        if (!confirmar) return;
+        if (!confirm(`A carta "${nome}" já existe. Sobrescrever?`)) return;
     }
-    salvarNoFirebase(nome);
-};
 
-function salvarNoFirebase(nome) {
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) {
         dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Não informada";
     }
+
     set(ref(db, 'personagens/' + nome), { nome, categoria, dicas })
     .then(() => {
-        alert("Salvo com sucesso!");
+        alert("Salvo!");
         document.getElementById('txt_personagem').value = "";
         for(let i=1; i<=10; i++) document.getElementById(`dica${i}`).value = "";
-    })
-    .catch(e => alert("Erro: " + e.message));
-}
-
-window.sortearNovaCarta = async function() {
-    const dbRef = ref(getDatabase());
-    const snapshot = await get(child(dbRef, 'personagens'));
-    if (snapshot.exists()) {
-        const lista = snapshot.val();
-        const chaves = Object.keys(lista);
-        const sorteado = chaves[Math.floor(Math.random() * chaves.length)];
-        const dados = lista[sorteado];
-        document.getElementById('display-categoria').innerText = dados.categoria;
-        document.getElementById('display-nome').innerText = dados.nome;
-        dicasAtuais = dados.dicas;
-        for(let i=1; i<=10; i++) {
-            const btn = document.getElementById(`btn-dica${i}`);
-            btn.innerText = `Dica ${i}`;
-            btn.classList.remove('revelada');
-        }
-    }
-}
-
-window.proximaCarta = () => window.sortearNovaCarta();
+    });
+};
