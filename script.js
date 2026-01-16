@@ -18,41 +18,39 @@ const db = getDatabase(app);
 let dicasAtuais = {};
 let pontuacoes = {};
 
-// Inicia Equipes e Placar
+// Iniciar Jogo e Criar Placar
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
     container.innerHTML = '';
     pontuacoes = {};
-
     for(let i = 1; i <= qtd; i++) {
         pontuacoes[i] = 0;
         container.innerHTML += `
             <div class="equipe-card cor-eqp-${i}">
-                <span class="equipe-nome">EQP ${i}</span>
+                <span class="equipe-nome">EQUIPE ${i}</span>
                 <span class="equipe-pontos" id="pontos-eqp-${i}">0</span>
                 <div style="display:flex; justify-content:center;">
-                    <button class="btn-ponto btn-amarelo" onclick="alterarPonto(${i},1)">+</button>
-                    <button class="btn-ponto btn-voltar" onclick="alterarPonto(${i},-1)">-</button>
+                    <button class="btn-ponto" onclick="alterarPonto(${i},1)">+</button>
+                    <button class="btn-ponto" onclick="alterarPonto(${i},-1)">-</button>
                 </div>
             </div>`;
     }
     window.showScreen('screen2');
-}
+    window.sortearNovaCarta();
+};
 
 window.alterarPonto = (eq, val) => {
     pontuacoes[eq] = Math.max(0, pontuacoes[eq] + val);
     document.getElementById(`pontos-eqp-${eq}`).innerText = pontuacoes[eq];
 };
 
-// Revela dica mantendo o número (ex: "3 - Texto da dica")
 window.revelarDica = (n) => {
     const btn = document.getElementById(`btn-dica${n}`);
     btn.innerText = `${n} - ${dicasAtuais[`dica${n}`]}`;
     btn.classList.add('revelada');
 };
 
-// Sorteio Aleatório
 window.sortearNovaCarta = async function() {
     const dbRef = ref(getDatabase());
     try {
@@ -62,32 +60,28 @@ window.sortearNovaCarta = async function() {
             const chaves = Object.keys(lista);
             const sorteado = chaves[Math.floor(Math.random() * chaves.length)];
             const dados = lista[sorteado];
-
             document.getElementById('display-categoria').innerText = dados.categoria;
             document.getElementById('display-nome').innerText = dados.nome;
             dicasAtuais = dados.dicas;
-
             for(let i=1; i<=10; i++) {
                 const btn = document.getElementById(`btn-dica${i}`);
-                if(btn) {
-                    btn.innerText = `Dica ${i}`;
-                    btn.classList.remove('revelada');
-                }
+                btn.innerText = `Dica ${i}`;
+                btn.classList.remove('revelada');
             }
         }
     } catch (e) { console.error(e); }
-}
+};
 
 window.proximaCarta = () => window.sortearNovaCarta();
 
-// Cadastro com validação de duplicata
+// Salvamento com Verificação de Duplicata e Limpeza
 window.processarSalvamento = async function() {
-    const nome = document.getElementById('txt_personagem').value.trim().toUpperCase();
+    const nomeInput = document.getElementById('txt_personagem');
+    const nome = nomeInput.value.trim().toUpperCase();
     if(!nome) return alert("Digite o nome!");
 
     const dbRef = ref(getDatabase());
     const snapshot = await get(child(dbRef, `personagens/${nome}`));
-
     if (snapshot.exists()) {
         if (!confirm(`A carta "${nome}" já existe. Sobrescrever?`)) return;
     }
@@ -95,13 +89,13 @@ window.processarSalvamento = async function() {
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) {
-        dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Não informada";
+        dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Vazio";
     }
 
     set(ref(db, 'personagens/' + nome), { nome, categoria, dicas })
     .then(() => {
         alert("Salvo!");
-        document.getElementById('txt_personagem').value = "";
+        nomeInput.value = "";
         for(let i=1; i<=10; i++) document.getElementById(`dica${i}`).value = "";
     });
 };
