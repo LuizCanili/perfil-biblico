@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const SENHA_MODERADOR = "1234"; // Altere sua senha aqui
+const SENHA_MODERADOR = "1234"; // Mude aqui
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWXSzJMGkH5XG8s5THKLLh_EGf1xT_3hU",
@@ -17,22 +17,21 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 let dicasAtuais = {};
 let pontuacoes = {};
-let cartasSorteadas = []; // Controle de repetição
+let cartasSorteadas = []; // Para não repetir
 
-// --- JOGO ---
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
     container.innerHTML = '';
     pontuacoes = {};
-    cartasSorteadas = []; // Reinicia lista de repetidas
+    cartasSorteadas = [];
 
     for(let i = 1; i <= qtd; i++) {
         pontuacoes[i] = 0;
         container.innerHTML += `
             <div class="equipe-card cor-eqp-${i}">
                 <span style="font-size:0.6rem; font-weight:bold;">EQP ${i}</span>
-                <span class="equipe-pontos" id="pontos-eqp-${i}" style="font-size:1.2rem; font-weight:bold; display:block;">0</span>
+                <span class="equipe-pontos" id="pontos-eqp-${i}">0</span>
                 <div style="display:flex; justify-content:center; gap:2px;">
                     <button style="width:28px; height:28px; padding:0;" onclick="alterarPonto(${i},1)">+</button>
                     <button style="width:28px; height:28px; padding:0;" onclick="alterarPonto(${i},-1)">-</button>
@@ -66,7 +65,7 @@ window.sortearNovaCarta = async function() {
             const disponiveis = todasChaves.filter(chave => !cartasSorteadas.includes(chave));
 
             if (disponiveis.length === 0) {
-                alert("O ACERVO CHEGOU AO FIM! O sorteio será reiniciado ao sair.");
+                alert("O ACERVO CHEGOU AO FIM!");
                 document.getElementById('display-nome').innerText = "FIM DO BARALHO";
                 return;
             }
@@ -87,18 +86,17 @@ window.sortearNovaCarta = async function() {
                 }
             }
         }
-    } catch (e) { console.error("Erro ao sortear:", e); }
+    } catch (e) { console.error(e); }
 };
 
 window.proximaCarta = () => window.sortearNovaCarta();
 
-// --- CADASTRO E LISTAGEM ---
 window.processarSalvamento = async function() {
-    const senha = prompt("Senha de Moderador:");
-    if (senha !== SENHA_MODERADOR) return alert("Senha incorreta!");
+    const senha = prompt("Senha:");
+    if (senha !== SENHA_MODERADOR) return alert("Erro!");
     const nomeInput = document.getElementById('txt_personagem');
     const nome = nomeInput.value.trim().toUpperCase();
-    if(!nome) return alert("Digite o nome!");
+    if(!nome) return;
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) { dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Vazio"; }
@@ -115,26 +113,18 @@ window.abrirListagem = async function() {
         const snapshot = await get(child(dbRef, 'personagens'));
         if (snapshot.exists()) {
             const lista = snapshot.val();
-            const categorias = { "Personagem": [], "Lugar": [], "Coisa": [] };
-            Object.values(lista).forEach(c => { if(categorias[c.categoria]) categorias[c.categoria].push(c.nome); });
             container.innerHTML = "";
-            for (let cat in categorias) {
-                if (categorias[cat].length > 0) {
-                    let html = `<div class="categoria-titulo">${cat}</div>`;
-                    categorias[cat].sort().forEach(nome => {
-                        html += `<div class="carta-item"><span>${nome}</span><button style="width:auto; padding:5px 10px; background:#E74C3C; font-size:0.7rem;" onclick="excluirCarta('${nome}')">EXCLUIR</button></div>`;
-                    });
-                    container.innerHTML += html;
-                }
-            }
-        } else { container.innerHTML = "Vazio."; }
-    } catch (e) { container.innerHTML = "Erro."; }
+            Object.values(lista).sort((a,b) => a.nome.localeCompare(b.nome)).forEach(c => {
+                container.innerHTML += `<div class="carta-item"><span>${c.nome}</span><button style="width:auto; padding:5px 10px; background:#E74C3C; font-size:0.7rem;" onclick="excluirCarta('${c.nome}')">EXCLUIR</button></div>`;
+            });
+        }
+    } catch (e) { console.error(e); }
 };
 
 window.excluirCarta = async function(nome) {
-    const senha = prompt(`Senha para excluir "${nome}":`);
-    if (senha !== SENHA_MODERADOR) return alert("Incorreta!");
-    if (confirm("Apagar permanentemente?")) {
-        remove(ref(db, 'personagens/' + nome)).then(() => { alert("Apagada!"); window.abrirListagem(); });
+    const senha = prompt("Senha:");
+    if (senha !== SENHA_MODERADOR) return;
+    if (confirm("Apagar?")) {
+        remove(ref(db, 'personagens/' + nome)).then(() => window.abrirListagem());
     }
 };
