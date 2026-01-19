@@ -23,15 +23,14 @@
             </select>
             <button class="btn-amarelo" onclick="iniciarJogo()">INICIAR JOGO</button>
             <button class="btn-roxo" onclick="showScreen('screen3')">CADASTRAR CARTAS</button>
+            <button class="btn-voltar" onclick="abrirListagem()">VER CARTAS NO ACERVO</button>
         </div>
     </div>
 
     <div id="screen2" class="screen" style="display:none;">
         <div id="placar-container"></div>
-        
         <h2 id="display-categoria">CATEGORIA</h2>
         <h2 id="display-nome">NOME</h2>
-        
         <div class="dicas-container-vertical">
             <button class="btn-dica-longa" id="btn-dica1" onclick="revelarDica(1)">Dica 1</button>
             <button class="btn-dica-longa" id="btn-dica2" onclick="revelarDica(2)">Dica 2</button>
@@ -44,7 +43,6 @@
             <button class="btn-dica-longa" id="btn-dica9" onclick="revelarDica(9)">Dica 9</button>
             <button class="btn-dica-longa" id="btn-dica10" onclick="revelarDica(10)">Dica 10</button>
         </div>
-
         <div class="footer-buttons">
             <button class="btn-roxo" onclick="proximaCarta()">PRÓXIMA CARTA</button>
             <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
@@ -67,14 +65,20 @@
                 <input type="text" id="dica7" placeholder="Dica 7"><input type="text" id="dica8" placeholder="Dica 8">
                 <input type="text" id="dica9" placeholder="Dica 9"><input type="text" id="dica10" placeholder="Dica 10">
             </div>
-            <button class="btn-salvar" onclick="processarSalvamento()">SALVAR CARTA</button>
-            <button class="btn-voltar" onclick="showScreen('screen1')">CANCELAR</button>
+            <button class="btn-roxo" onclick="processarSalvamento()">SALVAR CARTA</button>
+            <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
         </div>
+    </div>
+
+    <div id="screen4" class="screen" style="display:none;">
+        <div class="cadastro-header">CARTAS CADASTRADAS</div>
+        <div id="lista-cartas-container" class="form-scroll"></div>
+        <button class="btn-voltar" onclick="showScreen('screen1')">VOLTAR</button>
     </div>
 
     <script type="module" src="script.js"></script>
     <script>
-        window.showScreen = function(id) {
+        window.showScreen = (id) => {
             document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
             const target = document.getElementById(id);
             if(target) target.style.display = 'flex';
