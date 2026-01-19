@@ -1,11 +1,11 @@
-/* 1. CONFIGURAÇÃO GLOBAL E PREVENÇÃO DE ZOOM */
+/* 1. CONFIGURAÇÃO IPHONE / SAFARI */
 body, html {
     margin: 0; padding: 0; width: 100%;
     height: 100svh; font-family: 'Segoe UI', sans-serif;
     background-color: #001a33; color: white;
     display: flex; justify-content: center; align-items: center; 
     overflow: hidden;
-    touch-action: manipulation; /* Impede zoom em cliques rápidos no iPhone */
+    touch-action: manipulation; /* Impede zoom automático */
 }
 
 .screen {
@@ -15,7 +15,7 @@ body, html {
     box-sizing: border-box; text-align: center;
 }
 
-/* 2. TÍTULO QUADRADO GRANDE (HOME) */
+/* 2. TÍTULO GIGANTE */
 .header-image { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
 .header-image div {
     background-color: #FFFF00; color: #4B0082; width: 380px; height: 280px;
@@ -23,7 +23,7 @@ body, html {
     font-weight: bold; border: 5px solid black; font-size: 60px; line-height: 1.1;
 }
 
-/* 3. DICAS - CORREÇÃO CRÍTICA PARA SAFARI */
+/* 3. DICAS - PREVENÇÃO DE CORTE SAFARI */
 .dicas-container-vertical {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     width: 100%; overflow-y: auto; flex-grow: 1; padding: 10px 0;
@@ -39,7 +39,6 @@ body, html {
     line-height: 1.4; word-wrap: break-word; white-space: normal;
     overflow: visible !important;
     -webkit-appearance: none;
-    touch-action: manipulation;
 }
 
 .btn-dica-longa.revelada { 
@@ -48,38 +47,34 @@ body, html {
     border: 3px solid #BDC3C7;
 }
 
-/* 4. PLACAR E JOGO */
-#placar-container { display: flex; justify-content: center; gap: 5px; width: 100%; margin-bottom: 10px; }
-.equipe-card { padding: 6px; border-radius: 10px; flex: 1; max-width: 85px; }
-.cor-eqp-1 { background-color: #E74C3C; } .cor-eqp-2 { background-color: #2ECC71; }
-.cor-eqp-3 { background-color: #3498DB; } .cor-eqp-4 { background-color: #F39C12; }
-.equipe-pontos { font-size: 1.3rem; font-weight: bold; display: block; }
+/* 4. ACERVO ORGANIZADO */
+.categoria-bloco { width: 100%; margin-bottom: 20px; display: block; }
 
-#display-categoria { color: #8E44AD; font-style: italic; text-transform: uppercase; font-size: 1.1rem; margin-top: 10px; }
-#display-nome { color: #FF0000; text-transform: uppercase; font-size: 1.8rem; font-weight: bold; margin-bottom: 15px; }
-
-/* 5. ACERVO CATEGORIZADO */
-.categoria-bloco { width: 100%; margin-top: 15px; margin-bottom: 5px; }
 .categoria-titulo-lista {
-    background-color: #4B0082; color: #FFFF00; padding: 8px 15px;
-    font-weight: bold; font-size: 0.9rem; text-align: left;
-    text-transform: uppercase; border-left: 5px solid #FFFF00; width: 100%; box-sizing: border-box;
+    background-color: #4B0082 !important; color: #FFFF00 !important;
+    padding: 10px 15px; font-weight: bold; font-size: 1rem; text-align: left;
+    border-left: 8px solid #FFFF00; width: 100%; box-sizing: border-box; margin-top: 10px;
 }
+
 .carta-item {
-    background: rgba(255,255,255,0.05); padding: 12px 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.08); padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;
 }
 
-/* 6. BOTÕES GERAIS */
+/* 5. BOTÕES E INPUTS */
 .footer-buttons { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
-button { width: 90%; max-width: 280px; padding: 15px; margin: 5px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; touch-action: manipulation; }
+button { width: 90%; max-width: 280px; padding: 15px; margin: 5px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
 .btn-amarelo { background-color: #F1C40F; color: black; }
 .btn-roxo { background-color: #9C27B0; color: white; }
 .btn-voltar { background-color: #7F8C8D; color: white; }
 .btn-excluir { background: #E74C3C; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; width: auto !important; margin: 0 !important; }
 
-/* 7. FORMULÁRIO */
+#placar-container { display: flex; justify-content: center; gap: 5px; width: 100%; margin-bottom: 10px; }
+.equipe-card { padding: 6px; border-radius: 10px; flex: 1; max-width: 85px; }
+.cor-eqp-1 { background-color: #E74C3C; } .cor-eqp-2 { background-color: #2ECC71; }
+.cor-eqp-3 { background-color: #3498DB; } .cor-eqp-4 { background-color: #F39C12; }
+
 .cadastro-header { background: #3F51B5; width: 100%; padding: 15px; font-weight: bold; margin-top: 25px; border-radius: 8px; }
 .form-scroll { width: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
 input, select { width: 90%; padding: 12px; margin: 6px 0; border-radius: 8px; border: none; font-size: 1rem; }
