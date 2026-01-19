@@ -5,7 +5,7 @@ body, html {
     background-color: #001a33; color: white;
     display: flex; justify-content: center; align-items: center; 
     overflow: hidden;
-    touch-action: manipulation; /* Impede zoom em cliques rápidos */
+    touch-action: manipulation; /* Impede zoom em cliques rápidos no iPhone */
 }
 
 .screen {
@@ -27,21 +27,18 @@ body, html {
 .dicas-container-vertical {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     width: 100%; overflow-y: auto; flex-grow: 1; padding: 10px 0;
-    -webkit-overflow-scrolling: touch; /* Rolagem suave no iPhone */
+    -webkit-overflow-scrolling: touch;
 }
 
 .btn-dica-longa {
     background-color: #34495E; color: #FFFFFF; width: 92%; max-width: 380px;
     padding: 15px; font-size: 1.05rem; border-radius: 12px; 
     border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-    
-    /* Configuração Flexbox para garantir altura dinâmica no Safari */
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    
     height: auto !important; min-height: 55px; max-height: none !important;
     line-height: 1.4; word-wrap: break-word; white-space: normal;
     overflow: visible !important;
-    -webkit-appearance: none; /* Remove estilos nativos do iOS */
+    -webkit-appearance: none;
     touch-action: manipulation;
 }
 
@@ -61,15 +58,28 @@ body, html {
 #display-categoria { color: #8E44AD; font-style: italic; text-transform: uppercase; font-size: 1.1rem; margin-top: 10px; }
 #display-nome { color: #FF0000; text-transform: uppercase; font-size: 1.8rem; font-weight: bold; margin-bottom: 15px; }
 
-/* 5. BOTÕES E FOOTER */
+/* 5. ACERVO CATEGORIZADO */
+.categoria-bloco { width: 100%; margin-top: 15px; margin-bottom: 5px; }
+.categoria-titulo-lista {
+    background-color: #4B0082; color: #FFFF00; padding: 8px 15px;
+    font-weight: bold; font-size: 0.9rem; text-align: left;
+    text-transform: uppercase; border-left: 5px solid #FFFF00; width: 100%; box-sizing: border-box;
+}
+.carta-item {
+    background: rgba(255,255,255,0.05); padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;
+}
+
+/* 6. BOTÕES GERAIS */
 .footer-buttons { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
 button { width: 90%; max-width: 280px; padding: 15px; margin: 5px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; touch-action: manipulation; }
 .btn-amarelo { background-color: #F1C40F; color: black; }
 .btn-roxo { background-color: #9C27B0; color: white; }
 .btn-voltar { background-color: #7F8C8D; color: white; }
+.btn-excluir { background: #E74C3C; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; width: auto !important; margin: 0 !important; }
 
-/* 6. CADASTRO E LISTAGEM */
+/* 7. FORMULÁRIO */
 .cadastro-header { background: #3F51B5; width: 100%; padding: 15px; font-weight: bold; margin-top: 25px; border-radius: 8px; }
 .form-scroll { width: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
-.carta-item { background: rgba(255,255,255,0.05); padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; width: 95%; align-items: center; box-sizing: border-box; }
 input, select { width: 90%; padding: 12px; margin: 6px 0; border-radius: 8px; border: none; font-size: 1rem; }
