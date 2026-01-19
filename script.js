@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const SENHA_MODERADOR = "281920"; // Mude aqui
+const SENHA_MODERADOR = "1234"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWXSzJMGkH5XG8s5THKLLh_EGf1xT_3hU",
@@ -17,8 +17,9 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 let dicasAtuais = {};
 let pontuacoes = {};
-let cartasSorteadas = []; // Para não repetir
+let cartasSorteadas = [];
 
+// --- LOGICA DE JOGO ---
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
@@ -65,14 +66,13 @@ window.sortearNovaCarta = async function() {
             const disponiveis = todasChaves.filter(chave => !cartasSorteadas.includes(chave));
 
             if (disponiveis.length === 0) {
-                alert("O ACERVO CHEGOU AO FIM!");
+                alert("O ACERVO CHEGOU AO FIM! O sorteio será reiniciado ao sair.");
                 document.getElementById('display-nome').innerText = "FIM DO BARALHO";
                 return;
             }
 
             const sorteado = disponiveis[Math.floor(Math.random() * disponiveis.length)];
             cartasSorteadas.push(sorteado);
-
             const dados = listaCompleta[sorteado];
             document.getElementById('display-categoria').innerText = dados.categoria;
             document.getElementById('display-nome').innerText = dados.nome;
@@ -80,10 +80,7 @@ window.sortearNovaCarta = async function() {
 
             for(let i=1; i<=10; i++) {
                 const btn = document.getElementById(`btn-dica${i}`);
-                if(btn) {
-                    btn.innerText = `Dica ${i}`;
-                    btn.classList.remove('revelada');
-                }
+                if(btn) { btn.innerText = `Dica ${i}`; btn.classList.remove('revelada'); }
             }
         }
     } catch (e) { console.error(e); }
@@ -91,12 +88,13 @@ window.sortearNovaCarta = async function() {
 
 window.proximaCarta = () => window.sortearNovaCarta();
 
+// --- CADASTRO E ACERVO CATEGORIZADO ---
 window.processarSalvamento = async function() {
-    const senha = prompt("Senha:");
-    if (senha !== SENHA_MODERADOR) return alert("Erro!");
+    const senha = prompt("Senha de Moderador:");
+    if (senha !== SENHA_MODERADOR) return alert("Senha incorreta!");
     const nomeInput = document.getElementById('txt_personagem');
     const nome = nomeInput.value.trim().toUpperCase();
-    if(!nome) return;
+    if(!nome) return alert("Digite o nome!");
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) { dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Vazio"; }
@@ -106,25 +104,34 @@ window.processarSalvamento = async function() {
 
 window.abrirListagem = async function() {
     const container = document.getElementById('lista-cartas-container');
-    container.innerHTML = "Carregando...";
+    container.innerHTML = "Carregando acervo...";
     window.showScreen('screen4');
     const dbRef = ref(getDatabase());
     try {
         const snapshot = await get(child(dbRef, 'personagens'));
         if (snapshot.exists()) {
-            const lista = snapshot.val();
+            const listaBruta = snapshot.val();
+            const grupos = { "Personagem": [], "Lugar": [], "Coisa": [] };
+            Object.values(listaBruta).forEach(carta => { if (grupos[carta.categoria]) grupos[carta.categoria].push(carta.nome); });
             container.innerHTML = "";
-            Object.values(lista).sort((a,b) => a.nome.localeCompare(b.nome)).forEach(c => {
-                container.innerHTML += `<div class="carta-item"><span>${c.nome}</span><button style="width:auto; padding:5px 10px; background:#E74C3C; font-size:0.7rem;" onclick="excluirCarta('${c.nome}')">EXCLUIR</button></div>`;
-            });
-        }
-    } catch (e) { console.error(e); }
+            for (let categoria in grupos) {
+                if (grupos[categoria].length > 0) {
+                    grupos[categoria].sort();
+                    let htmlBloco = `<div class="categoria-bloco"><div class="categoria-titulo-lista">${categoria} (${grupos[categoria].length})</div>`;
+                    grupos[categoria].forEach(nome => {
+                        htmlBloco += `<div class="carta-item"><span>${nome}</span><button class="btn-excluir" onclick="excluirCarta('${nome}')">EXCLUIR</button></div>`;
+                    });
+                    container.innerHTML += htmlBloco + `</div>`;
+                }
+            }
+        } else { container.innerHTML = "Nenhuma carta cadastrada."; }
+    } catch (e) { container.innerHTML = "Erro ao carregar."; }
 };
 
 window.excluirCarta = async function(nome) {
-    const senha = prompt("Senha:");
-    if (senha !== SENHA_MODERADOR) return;
-    if (confirm("Apagar?")) {
-        remove(ref(db, 'personagens/' + nome)).then(() => window.abrirListagem());
+    const senha = prompt(`Senha para excluir "${nome}":`);
+    if (senha !== SENHA_MODERADOR) return alert("Incorreta!");
+    if (confirm("Apagar permanentemente?")) {
+        remove(ref(db, 'personagens/' + nome)).then(() => { alert("Excluída!"); window.abrirListagem(); });
     }
 };
