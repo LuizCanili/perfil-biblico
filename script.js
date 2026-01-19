@@ -19,20 +19,18 @@ let dicasAtuais = {};
 let pontuacoes = {};
 let cartasSorteadas = [];
 
-// --- LOGICA DE JOGO ---
 window.iniciarJogo = function() {
     const qtd = document.getElementById('qtd_equipes').value;
     const container = document.getElementById('placar-container');
     container.innerHTML = '';
-    pontuacoes = {};
-    cartasSorteadas = [];
+    pontuacoes = {}; cartasSorteadas = [];
 
     for(let i = 1; i <= qtd; i++) {
         pontuacoes[i] = 0;
         container.innerHTML += `
             <div class="equipe-card cor-eqp-${i}">
                 <span style="font-size:0.6rem; font-weight:bold;">EQP ${i}</span>
-                <span class="equipe-pontos" id="pontos-eqp-${i}">0</span>
+                <span id="pontos-eqp-${i}" style="font-size:1.3rem; font-weight:bold; display:block;">0</span>
                 <div style="display:flex; justify-content:center; gap:2px;">
                     <button style="width:28px; height:28px; padding:0;" onclick="alterarPonto(${i},1)">+</button>
                     <button style="width:28px; height:28px; padding:0;" onclick="alterarPonto(${i},-1)">-</button>
@@ -62,11 +60,10 @@ window.sortearNovaCarta = async function() {
         const snapshot = await get(child(dbRef, 'personagens'));
         if (snapshot.exists()) {
             const listaCompleta = snapshot.val();
-            const todasChaves = Object.keys(listaCompleta);
-            const disponiveis = todasChaves.filter(chave => !cartasSorteadas.includes(chave));
+            const disponiveis = Object.keys(listaCompleta).filter(chave => !cartasSorteadas.includes(chave));
 
             if (disponiveis.length === 0) {
-                alert("O ACERVO CHEGOU AO FIM! O sorteio será reiniciado ao sair.");
+                alert("ACERVO CHEGOU AO FIM!");
                 document.getElementById('display-nome').innerText = "FIM DO BARALHO";
                 return;
             }
@@ -88,13 +85,12 @@ window.sortearNovaCarta = async function() {
 
 window.proximaCarta = () => window.sortearNovaCarta();
 
-// --- CADASTRO E ACERVO CATEGORIZADO ---
 window.processarSalvamento = async function() {
-    const senha = prompt("Senha de Moderador:");
-    if (senha !== SENHA_MODERADOR) return alert("Senha incorreta!");
+    const senha = prompt("Senha:");
+    if (senha !== SENHA_MODERADOR) return alert("Erro!");
     const nomeInput = document.getElementById('txt_personagem');
     const nome = nomeInput.value.trim().toUpperCase();
-    if(!nome) return alert("Digite o nome!");
+    if(!nome) return;
     const categoria = document.getElementById('sel_categoria').value;
     const dicas = {};
     for(let i=1; i<=10; i++) { dicas[`dica${i}`] = document.getElementById(`dica${i}`).value || "Vazio"; }
@@ -104,7 +100,7 @@ window.processarSalvamento = async function() {
 
 window.abrirListagem = async function() {
     const container = document.getElementById('lista-cartas-container');
-    container.innerHTML = "Carregando acervo...";
+    container.innerHTML = "<p>Carregando...</p>";
     window.showScreen('screen4');
     const dbRef = ref(getDatabase());
     try {
@@ -112,26 +108,28 @@ window.abrirListagem = async function() {
         if (snapshot.exists()) {
             const listaBruta = snapshot.val();
             const grupos = { "Personagem": [], "Lugar": [], "Coisa": [] };
-            Object.values(listaBruta).forEach(carta => { if (grupos[carta.categoria]) grupos[carta.categoria].push(carta.nome); });
+            Object.values(listaBruta).forEach(carta => {
+                let cat = carta.categoria ? carta.categoria.trim() : "Personagem";
+                if (cat.toLowerCase() === "personagem") grupos["Personagem"].push(carta.nome);
+                else if (cat.toLowerCase() === "lugar") grupos["Lugar"].push(carta.nome);
+                else if (cat.toLowerCase() === "coisa") grupos["Coisa"].push(carta.nome);
+                else { if (!grupos[cat]) grupos[cat] = []; grupos[cat].push(carta.nome); }
+            });
             container.innerHTML = "";
-            for (let categoria in grupos) {
-                if (grupos[categoria].length > 0) {
-                    grupos[categoria].sort();
-                    let htmlBloco = `<div class="categoria-bloco"><div class="categoria-titulo-lista">${categoria} (${grupos[categoria].length})</div>`;
-                    grupos[categoria].forEach(nome => {
-                        htmlBloco += `<div class="carta-item"><span>${nome}</span><button class="btn-excluir" onclick="excluirCarta('${nome}')">EXCLUIR</button></div>`;
-                    });
-                    container.innerHTML += htmlBloco + `</div>`;
+            for (let cat in grupos) {
+                if (grupos[cat].length > 0) {
+                    grupos[cat].sort();
+                    let html = `<div class="categoria-bloco"><div class="categoria-titulo-lista">${cat.toUpperCase()} (${grupos[cat].length})</div>`;
+                    grupos[cat].forEach(nome => { html += `<div class="carta-item"><span>${nome}</span><button class="btn-excluir" onclick="excluirCarta('${nome}')">EXCLUIR</button></div>`; });
+                    container.innerHTML += html + `</div>`;
                 }
             }
-        } else { container.innerHTML = "Nenhuma carta cadastrada."; }
-    } catch (e) { container.innerHTML = "Erro ao carregar."; }
+        }
+    } catch (e) { console.error(e); }
 };
 
 window.excluirCarta = async function(nome) {
-    const senha = prompt(`Senha para excluir "${nome}":`);
-    if (senha !== SENHA_MODERADOR) return alert("Incorreta!");
-    if (confirm("Apagar permanentemente?")) {
-        remove(ref(db, 'personagens/' + nome)).then(() => { alert("Excluída!"); window.abrirListagem(); });
-    }
+    const senha = prompt("Senha:");
+    if (senha !== SENHA_MODERADOR) return;
+    if (confirm("Apagar?")) { remove(ref(db, 'personagens/' + nome)).then(() => window.abrirListagem()); }
 };
