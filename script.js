@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const SENHA_MODERADOR = "1234"; // Mude aqui
+const SENHA_MODERADOR = "281920"; // Mude aqui
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWXSzJMGkH5XG8s5THKLLh_EGf1xT_3hU",
